@@ -11,10 +11,7 @@ import (
 type PubSub struct {}
 type Client struct{
 	client *pubsub.Client
-}
-
-type Topic struct{
-	topic *pubsub.Topic
+	ctxPtr *context.Context
 }
 
 func init() {
@@ -24,18 +21,13 @@ func init() {
 func (* PubSub) XClient(ctxPtr *context.Context, project string) interface{}{
 	rt := common.GetRuntime(*ctxPtr)
 	cli, _ := pubsub.NewClient(*ctxPtr, project)
-	return common.Bind(rt, &Client{client: cli}, ctxPtr)
+	return common.Bind(rt, &Client{client: cli, ctxPtr: ctxPtr}, ctxPtr)
 }
 
-func (cli *Client) XTopic(ctxPtr *context.Context, topicName string) interface{} {
-	rt := common.GetRuntime(*ctxPtr)
-	topic := cli.client.Topic(topicName)
-	return common.Bind(rt, &Topic{topic: topic}, ctxPtr)
-}
-
-func (t *Topic)XPublish(ctxPtr *context.Context, msg string){
+func (cli *Client) Publish(topicNmae, msg string) {
+	topic := cli.client.Topic(topicNmae)
 	m := &pubsub.Message{
 		Data: []byte(msg),
 	}
-	t.topic.Publish(*ctxPtr, m)
+	topic.Publish(*cli.ctxPtr, m)
 }
