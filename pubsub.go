@@ -9,9 +9,10 @@ import (
 )
 
 type PubSub struct {}
-type client struct{
+type Client struct{
 	client *pubsub.Client
 }
+
 func init() {
 	modules.Register("k6/x/CloudPubSub", new(PubSub))
 }
@@ -19,5 +20,5 @@ func init() {
 func (* PubSub) XClient(ctxPtr *context.Context) interface{}{
 	rt := common.GetRuntime(*ctxPtr)
 	//cli, _ := pubsub.NewClient(*ctxPtr, project)
-	return common.Bind(rt, &client{}, ctxPtr)
+	return common.Bind(rt, &Client{}, ctxPtr)
 }
