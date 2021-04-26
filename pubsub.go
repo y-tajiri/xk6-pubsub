@@ -13,7 +13,7 @@ func init() {
 	modules.Register("k6/x/CloudPubSub", new(PubSub))
 }
 
-func (* PubSub) NewClient(ctx context.Context, project string) *pubsub.Client {
+func (* PubSub) XClient(ctx context.Context, project string) *pubsub.Client {
 	cli, _ := pubsub.NewClient(ctx, project)
 	return cli
 }
